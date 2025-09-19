@@ -38,6 +38,8 @@ A high-performance, in-memory Pub/Sub service built with Node.js, featuring WebS
 
 ### Docker Deployment
 
+#### Using Docker Compose (Recommended)
+
 1. **Start the service**:
    ```bash
    docker-compose up -d
@@ -65,6 +67,47 @@ A high-performance, in-memory Pub/Sub service built with Node.js, featuring WebS
        environment:
          - QUEUE_MAX=200
          - RING_BUFFER_SIZE=500
+   ```
+
+#### Building Docker Image Manually
+
+1. **Build the image**:
+   ```bash
+   docker build -t plivo-pubsub .
+   ```
+
+2. **Run the container**:
+   ```bash
+   docker run -d \
+     --name plivo-pubsub \
+     -p 8081:8080 \
+     -e NODE_ENV=production \
+     -e LOG_LEVEL=info \
+     plivo-pubsub
+   ```
+
+3. **With custom configuration**:
+   ```bash
+   docker run -d \
+     --name plivo-pubsub \
+     -p 8081:8080 \
+     -e PORT=8080 \
+     -e QUEUE_MAX=200 \
+     -e RING_BUFFER_SIZE=500 \
+     -e SLOW_CONSUMER_THRESHOLD=100 \
+     -e LOG_LEVEL=debug \
+     plivo-pubsub
+   ```
+
+4. **View container logs**:
+   ```bash
+   docker logs -f plivo-pubsub
+   ```
+
+5. **Stop and remove container**:
+   ```bash
+   docker stop plivo-pubsub
+   docker rm plivo-pubsub
    ```
 
 ### Docker Management
