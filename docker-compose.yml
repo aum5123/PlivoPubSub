@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  plivo-pubsub:
+    build: .
+    container_name: plivo-pubsub-service
+    ports:
+      - "5000:8080"
+    environment:
+      - PORT=8080
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+      - QUEUE_MAX=100
+      - RING_BUFFER_SIZE=100
+      - SLOW_CONSUMER_THRESHOLD=50
+      - GRACEFUL_TIMEOUT_MS=5000
+      - HEARTBEAT_INTERVAL=30000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - plivo-network
+
+networks:
+  plivo-network:
+    driver: bridge
